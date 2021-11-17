@@ -1,0 +1,18 @@
+{
+  "name": "kenna-js-api-interview-demo",
+  "version": "1.0.0",
+  "description": "A sample test repo for the Kenna API",
+  "main": "index.js",
+  "repository": "git@github.com:kenna-kevin/kenna-js-api-interview-demo.git",
+  "author": "Kevin Lalka <kevin.lalka@kennasecurity.com>",
+  "license": "MIT",
+  "scripts": {
+    "test": "jest"
+  },
+  "devDependencies": {
+    "jest": "^27.3.1"
+  },
+  "dependencies": {
+    "node-fetch": "^3.1.0"
+  }
+}
