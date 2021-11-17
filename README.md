@@ -9,4 +9,4 @@ Uses yarn to install dependencies
 
 ## Run tests
 
-The `yarn test` command will run `jest` 
+The `yarn test` command will run `mocha` 
