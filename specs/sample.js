@@ -1,9 +1,9 @@
 const assert = require('assert')
 const KennaAPI = require('../KennaAPI')
 require('dotenv').config();
-const userToken = process.env["X_RISK_TOKEN"]
 
 describe('Asset Groups', () => {
+    const userToken = process.env["X_RISK_TOKEN"]
     const AssetGroupRequest = new KennaAPI(userToken)
     it('GET / responds with 200 OK', async () => {
         const response = await AssetGroupRequest.get("/asset_groups")
@@ -45,7 +45,6 @@ describe('Asset Groups', () => {
                     "name":"Postman Update"
                 }
         }
-
         
         const response = await AssetGroupRequest.put(`asset_groups/${assetGroupID}`, updateUserBody)
 
