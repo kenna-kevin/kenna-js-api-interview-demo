@@ -2,29 +2,25 @@ const assert = require('assert')
 const KennaAPI = require('../KennaAPI')
 require('dotenv').config();
 const userToken = process.env["X_RISK_TOKEN"]
-const pactum = require('pactum')
 
 describe('Asset Groups', () => {
+    const AssetGroupRequest = new KennaAPI(userToken)
     it('GET / responds with 200 OK', async () => {
-        const ListAssetGroupRequest = new KennaAPI(userToken, { endpoint: "asset_groups" })
-        const response = await ListAssetGroupRequest.get()
+        const response = await AssetGroupRequest.get("/asset_groups")
         
-        assert.equal(response.statusCode, 200)
-        assert.equal(response.json.hasOwnProperty("asset_groups"), true)
+        assert.equal(response.status, 200)
     });
     
     it('GET /:asset_group_id with invalid ID responds with 404', async () => {
         const invalidID = 12345678
-        const ShowAssetGroupRequest = new KennaAPI(userToken, { endpoint: `asset_groups/${invalidID}` })
-        const response = await ShowAssetGroupRequest.get()
+        const response = await AssetGroupRequest.get(`/asset_groups/${invalidID}`)
 
-        assert.equal(response.statusCode, 404)
-        assert.equal(response.json.success, "false")
-        assert.equal(response.json.message, "Asset Group not found.")
+        assert.equal(response.status, 404)
+        assert.equal(response.data.success, "false")
+        assert.equal(response.data.message, "Asset Group not found.")
     })
 
     it('POST / responds with 201 Created', async () => {
-        const CreateAssetGroupRequest = new KennaAPI(userToken, { endpoint: "asset_groups" })
         const createUserBody = {
             "asset_group": {
                 "name": "Demo",
@@ -34,35 +30,36 @@ describe('Asset Groups', () => {
                 }
             }
         }
-        const response = await pactum.spec().post("https://api.kdev.docker/asset_groups").withBody(JSON.stringify(createUserBody))
-        // const response = await CreateAssetGroupRequest.post(createUserBody)
+        const response = await AssetGroupRequest.post("asset_groups/", createUserBody)
 
-        assert.equal(response.statusCode, 201)
+        assert.equal(response.status, 201)
     })
 
-    it('updates an asset group', async () => {
-        const assetGroupID = 304163
+    // TODO - Update already existing asset group
+    it.skip('updates an asset group', async () => {
+        // Need to get a valid ID
+        const assetGroupID = 12345678
         const updateUserBody = {
             "asset_group":
                 {
                     "name":"Postman Update"
                 }
         }
-        
-        const UpdateAssetGroup = new KennaAPI(userToken, { endpoint: `asset_groups/${assetGroupID}` })
-        
-        const response = await UpdateAssetGroup.put(updateUserBody)
 
-        assert.equal(response.statusCode, 204)
+        
+        const response = await AssetGroupRequest.put(`asset_groups/${assetGroupID}`, updateUserBody)
+
+        assert.equal(response.status, 204)
     })
 
+    // TODO - Delete already existing asset group
     it.skip('deletes an asset group', async () => {
+        // Need to get a valid ID
         const assetGroupID = 12345678
-        const DeleteAssetGroup = new KennaAPI(userToken, { endpoint: `asset_groups/${assetGroupID}` })
         
-        const response = await DeleteAssetGroup.delete()
+        const response = await AssetGroupRequest.delete(`asset_groups/${assetGroupID}`)
 
-        assert.equal(response.statusCode, 200)
+        assert.equal(response.status, 204)
     })
 })
 

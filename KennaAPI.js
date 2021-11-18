@@ -1,38 +1,52 @@
-const pactum = require('pactum');
+const axios = require('axios');
 
 class KennaAPI {
-    constructor(XRiskToken, options) {
-        this.baseurl =  process.env.API_BASEURL || options?.baseurl
-        try {
-            this.endpoint = options.endpoint
-        }
-        catch {
-            throw new Error("You must provide the Kenna endpoint route")
-        }
+    constructor(XRiskToken) {
         if (!XRiskToken) {
             throw new Error("No Risk Token provided")
         }
-        this.headers = { "Content-Type": "application/json", "x-risk-token": XRiskToken }
-
-        pactum.request.setBaseUrl(this.baseurl)
-        pactum.request.setDefaultHeaders(this.headers)
+        this.instance = axios.create({
+            baseURL: process.env.API_BASEURL,
+            timeout: 10000,
+            headers: { "Accept": "application/json", "Content-Type": "application/json", "x-risk-token": XRiskToken },
+            validateStatus: null
+        })
     }
 
-    get() {
-        return pactum.spec()
-            .get(this.endpoint)
+    async get(path) {
+        try {
+            return await this.instance.get(path)
+        }
+        catch(err) {
+            return err
+        }
     }
-
-    post(jsonBody) {
-        return pactum.spec().post(this.endpoint).withJson(jsonBody)
+    
+    async post(path, body) {
+        try {
+            return await this.instance.post(path, body)
+        }
+        catch(err) {
+            return err
+        }
     }
-
-    put(jsonBody) {
-        return pactum.spec().put(this.endpoint).withJson(jsonBody)
+    
+    async put(path ,body) {
+        try {
+            return await this.instance.put(path, JSON.stringify(body))
+        }
+        catch (err) {
+            return err
+        }
     }
-
-    delete() {
-        return pactum.spec().delete(this.endpoint)
+    
+    async delete(path) {
+        try {
+            return await this.instance.delete(path)
+        }
+        catch (err) {
+            return err
+        }
     }
 }
 
